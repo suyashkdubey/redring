@@ -1,0 +1,43 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "redring"
+version = "0.1.0"
+description = "Evidence-driven AI-assisted development environment diagnostics."
+requires-python = ">=3.14"
+license = {text = "MIT"}
+
+authors = [
+    {name = "Suyash Kumar Dubey"}
+]
+
+keywords = [
+    "diagnostics",
+    "developer-tools",
+    "python",
+    "cli",
+    "textual",
+    "environment"
+]
+
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.14",
+    "Operating System :: OS Independent",
+    "Environment :: Console",
+]
+
+dependencies = [
+    "textual>=5.0.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/redring"
+Repository = "https://github.com/yourusername/redring"
+Issues = "https://github.com/yourusername/redring/issues"
+
+[project.scripts]
+redring = "redring.cli.main:app"
