@@ -1,3 +1,4 @@
+>[!NOTE]
 > **RedRing Architecture & Direction**  
 > This document is part of the **RedRing** project documentation. It should evolve alongside the codebase and be updated whenever the architecture or project direction changes.
 
