@@ -4,5 +4,11 @@ from .models.status import ScanStatus
 class BaseScanner(ABC):
     @property
     @abstractmethod
-    def capability(self) -> None:
-        pass
+    def capability(self) -> str:
+        """Unique capability identifier"""
+        ...
+
+    @abstractmethod
+    def scan(self) -> ScanStatus:
+        """Execute the scan and return collected evidences"""
+        ...
