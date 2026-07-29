@@ -2,12 +2,11 @@ from abc import ABC, abstractmethod
 from .models.status import ScanStatus
 
 class BaseScanner(ABC):
-    @property
+    @classmethod
     @abstractmethod
-    def capability(self) -> str:
-        """Unique capability identifier"""
+    def capability(cls) -> str:
         ...
-
+        
     @abstractmethod
     def scan(self) -> ScanStatus:
         """Execute the scan and return collected evidences"""
