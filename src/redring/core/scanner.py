@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from .models.status import ScanStatus
+from .models.result import ScanResult
 
 class BaseScanner(ABC):
     @classmethod
@@ -8,6 +8,6 @@ class BaseScanner(ABC):
         ...
         
     @abstractmethod
-    def scan(self) -> ScanStatus:
+    def scan(self) -> ScanResult:
         """Execute the scan and return collected evidences"""
         ...

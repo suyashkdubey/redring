@@ -12,5 +12,5 @@ class ScannerRegistry():
         return cls._registry.get(capability)
 
     @classmethod
-    def list(cls):
+    def list(cls) -> list[str]:
         return list(cls._registry.keys())
