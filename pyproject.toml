@@ -35,9 +35,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/redring"
-Repository = "https://github.com/yourusername/redring"
-Issues = "https://github.com/yourusername/redring/issues"
+Homepage = "https://redring.netlify.app"
+Repository = "https://github.com/suyashxdev/redring"
+Issues = "https://github.com/suyashxdev/redring/issues"
 
 [project.scripts]
 redring = "redring.cli.main:app"
