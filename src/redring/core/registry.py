@@ -14,3 +14,12 @@ class ScannerRegistry():
     @classmethod
     def list(cls) -> list[str]:
         return list(cls._registry.keys())
+
+    @classmethod
+    def get_by_prefix(cls, stack:str) -> list[type[BaseScanner]]:
+        """Returns the list of available scanners for provided tech stack."""
+        scanners = []
+        for capability, scanner in cls._registry.items():
+            if capability.startswith(f"{stack.lower()}."):
+                scanners.append(scanner)
+        return scanners
