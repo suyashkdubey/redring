@@ -23,8 +23,14 @@ class CLIRenderer(BaseRenderer):
 
     def _format_evidence(self, result: ScanResult, lines: list[str]) -> None:
         lines.append("Evidence:")
+        lines.append("")
+        max_len = max(
+            len(k.replace("_", " ").title())
+            for k in result.evidence.keys()
+        )
         for key, value in result.evidence.items():
-            lines.append(f"{key.replace('_', ' ').title()} : {value}")
+            display_key = key.replace("_", " ").title()
+            lines.append(f"• {display_key.ljust(max_len)} : {value}")
         lines.append(_SEPARATOR)
 
     def _format_issues(self, result: ScanResult, lines: list[str]) -> None:
