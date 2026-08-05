@@ -1,3 +1,4 @@
+from __future__ import annotations
 from redring.core.registry import ScannerRegistry
 from redring.core.models.result import ScanResult
 
