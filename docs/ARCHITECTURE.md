@@ -76,7 +76,7 @@ flowchart TB
 - Safe by default: no automatic changes without confirmation
 ## Adding a scanner
  
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the scanner template and registration steps.
+See [CONTRIBUTING.md](../CONTRIBUTING.md) for the scanner template and registration steps.
  
 ## Full design notes
  
