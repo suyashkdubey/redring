@@ -4,9 +4,9 @@ build-backend = "hatchling.build"
 
 [project]
 name = "redring"
-version = "0.1.0"
+version = "0.2.0"
 description = "Evidence-driven AI-assisted development environment diagnostics."
-requires-python = ">=3.14"
+requires-python = ">=3.12"
 license = {text = "MIT"}
 
 authors = [
