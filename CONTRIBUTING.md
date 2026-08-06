@@ -51,6 +51,8 @@ When adding a new scanner:
 - avoid hard-coded assumptions,
 - make failures observable and diagnosable.
 
+> *To know more about scanners and its templates, check out the detailed [scanner-docs](https://redring.pages.dev/docs-scanner-spec)*
+
 ### Diagnosis Contributions
 
 When improving diagnosis behavior:
