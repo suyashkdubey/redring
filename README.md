@@ -1,97 +1,89 @@
+> [!NOTE]
+> This tool is under active development and isn't usable yet.
+> The stable version released will be **v1.0.0**.
+
 # RedRing
 
-RedRing is an AI-assisted developer diagnostics tool focused on solving real environment and toolchain issues with evidence-first guidance.
+RedRing checks your development environment and fixes what's broken.
 
-Instead of guessing, RedRing inspects the local machine, verifies compatibility requirements, and helps developers understand what is blocking their setup.
+## Problem it solves
 
----
+You run `docker-compose up` and get an error. You spend 2 hours
+Googling. It turns out Docker virtualization was disabled in BIOS.
 
-## What RedRing Does
+RedRing finds these issues in 5 seconds and even auto fix on your demand.
 
-RedRing is designed to help developers troubleshoot problems related to their technology stack. It can inspect local setup conditions and guide the user through practical next steps.
+## What it is
 
-A typical workflow might include:
+A local diagnostics tool for developer environments. Run it when a tool fails to start or install, and it reports the exact environment issue. Then you can try fixing the issue yourself or using the in-built auto fix of this tool too.
 
-- checking whether a tool's system requirements are met,
-- validating available resources such as RAM or disk space,
-- confirming internet access when downloads are required,
-- checking hardware support such as virtualization,
-- identifying BIOS or system-level blockers,
-- producing a developer-friendly explanation of what is wrong and what to do next.
+## AI-based explanations (optional)
 
----
+*Diagnosis and evidence collection work **without any API key.***
+For plain-English explanations, add a key from one of:
 
-## Supported Developer Stacks
+- Groq (free tier available): https://console.groq.com/keys
+- OpenAI: https://platform.openai.com/api-keys
+- Anthropic Claude: https://platform.claude.com/settings/keys
+- Google Gemini: https://aistudio.google.com/api-keys
 
-RedRing is being designed to support a wide range of developer stacks, including:
-
-- Python
-- Docker
-- Git
-- Node.js
-- Java
-- Rust
-- Go
-- PostgreSQL
-- MySQL
-- Redis
-- MongoDB
-- CUDA
-- Android
-- Flutter
-- Kubernetes
-
----
-
-## Example Use Case
-
-A developer trying to install Docker may not know whether their machine is capable of running it.
-
-RedRing can check:
-
-- whether the system meets Docker prerequisites,
-- whether enough RAM is available,
-- whether internet access is available,
-- whether virtualization is present,
-- whether virtualization is enabled in BIOS.
-
-If the issue is a BIOS setting, RedRing can explain the exact next step clearly and practically.
-
----
-
-## Core Principles
-
-- Evidence first
-- Explain before fixing
-- Ask before making changes
-- Prefer clear, actionable output
-- Keep AI grounded in machine inspection
-
----
-
-## Project Status
-
-RedRing is currently in its early foundation phase, with the architecture, documentation, and scanner-oriented roadmap being shaped around the developer troubleshooting use case.
-
----
-
-## Quick Start
+## Installation
 
 ```bash
-redring analyze
+pip install redring
 ```
 
----
+## Quick start
+
+```bash
+redring diagnose <stack>
+```
+
+Example:
+
+```bash
+redring diagnose docker
+```
+
+## Real example
+
+If Docker won't run, RedRing can show whether:
+
+- the OS meets Docker requirements
+- enough RAM is available
+- virtualization support is present
+- network access is available
+- BIOS or kernel settings are blocking it
+
+It gives a practical reason instead of a vague failure.
+
+## Why it's different
+
+- **checks the local environment**, not just command output
+- **focuses on real blockers** in the system and toolchain
+- **gives clear next steps** for developers
+- **doesn't guess or make changes automatically** until you confirm
+- **auto-fixes safely** — makes changes, backs them up, lets you rollback
+
+*Most tools just say "Docker failed." RedRing shows why.*
+
+## Limitations
+
+Current limitations:
+
+- Requires Python 3.12 and above
+- only checks supported stacks (Check if your tech is supported: https://redring.pages.dev/docs#docs-supported-tech-stack)
+- depends on available local scanners
+
+## Contributing
+
+The easiest way to contribute is by **building a new scanner** or **improving existing scanner code**. Scanners are self-contained and follow a simple pattern, so it's the fastest way to get familiar with the codebase.
+
+See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for the scanner template and setup steps.
 
 ## Documentation
 
-See the project docs for the architecture, roadmap, vision, and contribution guidance:
-
-- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-- [docs/VISION.md](docs/VISION.md)
-- [docs/ROADMAP.md](docs/ROADMAP.md)
-- [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)
-- [docs/SCANNER_SPEC.md](docs/SCANNER_SPEC.md)
+To read the documentation, please visit our website: https://redring.pages.dev/docs
 
 ---
 
