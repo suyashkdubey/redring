@@ -79,7 +79,7 @@ Current limitations:
 
 The easiest way to contribute is by **building a new scanner** or **improving existing scanner code**. Scanners are self-contained and follow a simple pattern, so it's the fastest way to get familiar with the codebase.
 
-See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for the scanner template and setup steps.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the scanner template and setup steps.
 
 ## Documentation
 
