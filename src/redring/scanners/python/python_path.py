@@ -4,7 +4,9 @@ from redring.core.scanner import BaseScanner
 from redring.core.models.result import ScanResult
 from redring.core.models.status import ScanStatus
 from redring.scanners.os.os_info import OSInfo
+from redring.core.logging import configure_logging
 
+logger = configure_logging()
 
 class PythonPathScanner(BaseScanner):
     @classmethod
@@ -13,7 +15,9 @@ class PythonPathScanner(BaseScanner):
 
     def scan(self) -> ScanResult:
         system = self._detect_system()
+        logger.debug("Detected system=%s",system)
         if not system:
+            logger.warning("Unable to detect the operating system")
             return ScanResult(
                 capability=self.capability(),
                 status=ScanStatus.UNKNOWN,
@@ -23,10 +27,14 @@ class PythonPathScanner(BaseScanner):
             )
 
         for command in self._candidate_commands(system):
+            logger.debug("Checking Python command=%s", command)
             executable = self._resolve_executable(command)
             if executable:
+                logger.debug("Resolved Python executable | command=%s | executable=%s", command, executable)
                 return self._build_result(command, executable, system)
+            logger.debug("Python command could not be resolved | command=%s", command)
 
+        logger.warning("Python executable not found in PATH")
         return ScanResult(
             capability=self.capability(),
             status=ScanStatus.FAIL,
@@ -57,6 +65,7 @@ class PythonPathScanner(BaseScanner):
             text=True
         )
         if completed.returncode != 0:
+            logger.debug("Python command failed | command=%s | returncode=%d", command, completed.returncode)
             return None
         return completed.stdout.strip()
 
