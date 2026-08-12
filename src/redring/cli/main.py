@@ -1,7 +1,10 @@
 import typer
 from redring.engine.engine import Engine
 from redring.renderers.cli import CLIRenderer
-import redring.scanners 
+from redring.core.logging import configure_logging
+import redring.scanners #This registers the modules so dont remove this line!
+
+logger = configure_logging()
 
 app = typer.Typer(
     name="RedRing",
@@ -16,15 +19,25 @@ def diagnose(stack:str = typer.Argument(
     """
     Diagnose issues for a specific technology stack.
     """
-    engine = Engine()
-    result = engine.run(stack)
-    renderer = CLIRenderer()
-    rendered_text = renderer.render(result)
-    print(rendered_text)
+    logger.info("Diagnose command started | stack=%s", stack)
+    try:
+        engine = Engine()
+        result = engine.run(stack)
+        logger.debug("Engine returned %d scan results", len(result))
+        renderer = CLIRenderer()
+        logger.debug("Rendering scan results")
+        rendered_text = renderer.render(result)
+        logger.debug("Rendering completed")
+        print(rendered_text)
+        logger.info("Diagnose command completed | stack=%s", stack)
+    except Exception:
+        logger.exception("Diagnose command failed | stack=%s", stack)
+        typer.echo("❌ Redring encountered an unexpected error.")
+        typer.echo("Check the log file for details.")
 
 @app.command()
 def version():
-    print("v0.1.0")
+    print("v0.2.0-alpha.2")
 
 if __name__ == "__main__":
     app()
