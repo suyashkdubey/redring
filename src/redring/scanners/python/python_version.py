@@ -4,6 +4,7 @@ from redring.core.registry import ScannerRegistry
 from redring.core.models.result import ScanResult
 from redring.core.models.status import ScanStatus
 from redring.core.logging import configure_logging
+from redring.utils.python import PythonUtilities
 
 logger = configure_logging()
 
@@ -13,28 +14,46 @@ class PythonVersionScanner(BaseScanner):
         return "python.version"
 
     def scan(self) -> ScanResult:
-        for command in ("python", "python3"):
-            logger.debug("Checking Python command | command=%s", command)
-            version = subprocess.run([command, "--version"], capture_output=True, text=True)
-            if version.returncode == 0:
-                detected_version = version.stdout.strip().replace("Python ", "")
-                logger.debug("Python version detected | command=%s | version=%s", command, detected_version)
-                return ScanResult(
-                    capability=self.capability(),
-                    status=ScanStatus.PASS,
-                    evidence={
-                        "version": detected_version,
-                        "command": command
-                    },
-                    warnings=[],
-                    errors=[]
-                )
-            logger.debug("Python version command failed | command=%s | returncode=%d", command, version.returncode)
-        logger.warning("Failed to detect Python version")
+        python_executable = PythonUtilities().find_python()
+        if python_executable is None:
+            logger.warning("Unable to find a usable Python interpreter")
+            return ScanResult(
+                capability=self.capability(),
+                status=ScanStatus.FAIL,
+                evidence={},
+                warnings=[],
+                errors=["Unable to find a usable Python interpreter"],
+            )
+
+        logger.debug("Checking Python version for executable=%s", python_executable)
+        version = subprocess.run([python_executable, "--version"], capture_output=True, text=True)
+        detected_version = (version.stdout or version.stderr).strip().replace("Python ", "")
+        if version.returncode == 0 and detected_version:
+            logger.debug(
+                "Python version detected | executable=%s | version=%s",
+                python_executable,
+                detected_version,
+            )
+            return ScanResult(
+                capability=self.capability(),
+                status=ScanStatus.PASS,
+                evidence={
+                    "version": detected_version,
+                    "command": python_executable,
+                },
+                warnings=[],
+                errors=[]
+            )
+
+        logger.debug(
+            "Python version command failed | executable=%s | returncode=%d",
+            python_executable,
+            version.returncode,
+        )
         return ScanResult(
             capability=self.capability(),
             status=ScanStatus.FAIL,
-            evidence={},
+            evidence={"command": python_executable},
             warnings=[],
             errors=["Python is not installed"]
         )
