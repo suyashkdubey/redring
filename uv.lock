@@ -1,6 +1,6 @@
 version = 1
 revision = 3
-requires-python = ">=3.14"
+requires-python = ">=3.12"
 
 [[package]]
 name = "annotated-doc"
@@ -90,15 +90,17 @@ wheels = [
 
 [[package]]
 name = "redring"
-version = "0.1.0"
+version = "0.2.0"
 source = { editable = "." }
 dependencies = [
+    { name = "rich" },
     { name = "textual" },
     { name = "typer" },
 ]
 
 [package.metadata]
 requires-dist = [
+    { name = "rich", specifier = ">=15.0.0" },
     { name = "textual", specifier = ">=5.0.0" },
     { name = "typer", specifier = ">=0.27.0" },
 ]
