@@ -11,7 +11,6 @@ class Engine:
     def run(self, stack: str) -> list[ScanResult]:
         logger.info("Engine started | stack=%s", stack)
         scanners = ScannerRegistry.get_by_prefix(stack)
-        logger.debug("Found %d scanners", len(scanners))
         results = []
         for scanner in scanners:
             try:
