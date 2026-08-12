@@ -1,3 +1,4 @@
 from .python_version import PythonVersionScanner
 from .python_path import PythonPathScanner
 from .python_venv import PythonVenvScanner
+from .python_pip import PythonPipScanner
