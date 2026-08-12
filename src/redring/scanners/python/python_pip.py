@@ -5,6 +5,7 @@ from redring.core.models.status import ScanStatus
 from redring.core.registry import ScannerRegistry
 from redring.core.scanner import BaseScanner
 from redring.core.logging import configure_logging
+from redring.utils.python import PythonUtilities
 
 logger = configure_logging()
 
@@ -15,7 +16,7 @@ class PythonPipScanner(BaseScanner):
 
     def scan(self) -> ScanResult:
         logger.debug("Checking pip for the active Python interpreter")
-        python_executable = self._find_python()
+        python_executable = PythonUtilities().find_python()
         if python_executable is None:
             logger.warning("Unable to find a usable Python interpreter")
             return ScanResult(
@@ -84,17 +85,6 @@ class PythonPipScanner(BaseScanner):
             errors=[],
         )
 
-    def _find_python(self) -> str | None:
-        for command in ("python", "python3"):
-            logger.debug("Checking Python command | command=%s", command)
-            result = subprocess.run(
-                [command, "-c", "import sys; print(sys.executable)"],capture_output=True,text=True)
-            if result.returncode == 0:
-                executable = result.stdout.strip()
-                if executable:
-                    return executable
-        return None
-    
     def _get_pip_info(self, python_executable: str) -> tuple[str, str, str] | None:
         result = subprocess.run(
             [python_executable,"-m","pip","--version"],capture_output=True,text=True)
