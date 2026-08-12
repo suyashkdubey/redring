@@ -29,7 +29,7 @@ class ScannerRegistry():
         logger.debug("Started fetching available scanners for stack=%s", stack)
         for capability, scanner in cls._registry.items():
             if capability.startswith(f"{stack.lower()}."):
-                logger.debug("Found scanner | capability=%s", scanner)
+                logger.debug("Found scanner | capability=%s", scanner.capability())
                 scanners.append(scanner)
         logger.debug("Found %s scanners in total", len(scanners))
         return scanners
