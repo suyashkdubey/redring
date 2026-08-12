@@ -55,8 +55,8 @@ class PythonPathScanner(BaseScanner):
 
     def _candidate_commands(self, system: str) -> tuple[str, ...]:
         if system == "windows":
-            return ("python", "python3", "py")
-        return ("python3", "python")
+            return ("python","py")
+        return ("python", "python3")
 
     def _resolve_executable(self, command: str) -> str | None:
         completed = subprocess.run(
