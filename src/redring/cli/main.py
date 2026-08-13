@@ -26,9 +26,8 @@ def diagnose(stack:str = typer.Argument(
         logger.debug("Engine returned %d scan results", len(result))
         renderer = CLIRenderer()
         logger.debug("Rendering scan results")
-        rendered_text = renderer.render(result)
+        renderer.render(result)
         logger.debug("Rendering completed")
-        print(rendered_text)
         logger.info("Diagnose command completed | stack=%s", stack)
     except Exception:
         logger.exception("Diagnose command failed | stack=%s", stack)
