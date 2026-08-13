@@ -23,7 +23,6 @@ keywords = [
 ]
 
 classifiers = [
-    "Development Status :: 2 - Alpha",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.14",
     "Operating System :: OS Independent",
