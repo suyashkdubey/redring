@@ -2,7 +2,6 @@ import typer
 from redring.engine.engine import Engine
 from redring.renderers.cli import CLIRenderer
 from redring.core.logging import configure_logging
-import redring.scanners #This registers the modules so dont remove this line!
 
 logger = configure_logging()
 
@@ -19,6 +18,7 @@ def diagnose(stack:str = typer.Argument(
     """
     Diagnose issues for a specific technology stack.
     """
+    import redring.scanners #This registers the modules so dont remove this line!
     logger.info("Diagnose command started | stack=%s", stack)
     try:
         engine = Engine()
