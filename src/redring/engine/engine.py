@@ -11,6 +11,17 @@ class Engine:
     def run(self, stack: str) -> list[ScanResult]:
         logger.info("Engine started | stack=%s", stack)
         scanners = ScannerRegistry.get_by_prefix(stack)
+        if not scanners:
+            logger.info("No scanners found for stack=%s", stack)
+            fallback = ScanResult(
+                capability=f"{stack}.unsupported",
+                status=ScanStatus.UNKNOWN,
+                evidence={},
+                warnings=["scanner not supported yet!"],
+                errors=[]
+            )
+            logger.debug("Returning fallback ScanResult for stack=%s", stack)
+            return [fallback]
         results = []
         for scanner in scanners:
             try:
