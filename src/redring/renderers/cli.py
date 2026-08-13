@@ -69,5 +69,5 @@ class CLIRenderer(BaseRenderer):
     def render(self, results: list[ScanResult]):
         console = Console()
         for result in results:
-            content = self._build_result_panel(result)
+            content = self._build_result_content(result)
             console.print(content)
