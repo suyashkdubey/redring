@@ -1,60 +1,76 @@
+from rich.console import Console, Group
+from rich.table import Table
+from rich.panel import Panel
+from rich.text import Text
+from rich.traceback import install
 from .base import BaseRenderer
 from redring.core.models.result import ScanResult
 from redring.core.models.status import ScanStatus
 
-_STATUS_MAP = {
-    ScanStatus.PASS: "✅ PASS",
-    ScanStatus.FAIL: "❌ FAIL",
-    ScanStatus.WARNING: "⚠️ WARNING"
+install()
+
+_STATUS_MAP:dict[ScanStatus, str] = {
+    ScanStatus.PASS : ":white_check_mark: [bold green]PASS[/bold green]",
+    ScanStatus.FAIL : ":x: [bold red]FAIL[/bold red]",
+    ScanStatus.WARNING : ":warning: [bold yellow]WARNING[/bold yellow]",
+    ScanStatus.UNKNOWN : ":grey_question: [bold grey]UNKNOWN[/bold grey]"
 }
-_SEPARATOR = "-" * 35
 
 class CLIRenderer(BaseRenderer):
-    def _format_capability(self, result:ScanResult, lines: list[str]) -> None:
-        parts = result.capability.split(".")
-        capability_capitalize = [name.capitalize() for name in parts]
-        capability = " ".join(capability_capitalize)
-        lines.append(capability)
-        lines.append(_SEPARATOR)
+    def _build_status_text(self, result: ScanResult) -> Text:
+        status_str = _STATUS_MAP.get(result.status, "")
+        return Text.from_markup(status_str)
 
-    def _format_status(self, result: ScanResult, lines: list[str]) -> None:
-        lines.append(f"Status: {_STATUS_MAP[result.status]}")
-        lines.append(_SEPARATOR)
+    def _build_evidence_table(self, result: ScanResult) -> Panel[Table, str] | None:
+        table = Table()
+        if not result.evidence:
+            table.add_row("No evidence found")
+            return None
+        table.add_column("Evidence")
+        table.add_column("Value")
+        for key, value in result.evidence.items():
+            # Ensure both key and value are renderable strings
+            table.add_row(str(key), str(value))
+        return Panel(table, title=result.capability)
 
-    def _format_evidence(self, result: ScanResult, lines: list[str]) -> None:
-        lines.append("Evidence:")
-        lines.append("")
-        if result.evidence:
-            max_len = max(
-                len(k.replace("_", " ").title())
-                for k in result.evidence.keys()
-            )
-            for key, value in result.evidence.items():
-                display_key = key.replace("_", " ").title()
-                lines.append(f"• {display_key.ljust(max_len)} : {value}")
-            lines.append(_SEPARATOR)
-        else:
-            lines.append("• No evidence available")
-
-    def _format_issues(self, result: ScanResult, lines: list[str]) -> None:
+    def _build_issues(self, result: ScanResult) -> tuple[Panel | None, Panel | None]:
+        warning_panel: Panel | None = None
+        error_panel: Panel | None = None
         if result.warnings:
-            lines.append("⚠️ Warnings:")
-            for warning in result.warnings:
-                lines.append(f"• {warning}")
-            lines.append(_SEPARATOR)
+            warning_text = "\n".join(f"• {warning}" for warning in result.warnings)
+            warning_panel = Panel(
+                warning_text,
+                title="⚠️  Warnings",
+                title_align="left",
+                border_style="bold yellow",
+                expand=False
+            )
         if result.errors:
-            lines.append("❌ Errors:")
-            for error in result.errors:
-                lines.append(f"• {error}")
-            lines.append(_SEPARATOR)
+            error_text = "\n".join(f"• {error}" for error in result.errors)
+            error_panel = Panel(
+                error_text,
+                title="❌  Errors",
+                title_align="left",
+                border_style="bold red",
+                expand=False
+            )
+        return warning_panel, error_panel
 
-    def render(self, results: list[ScanResult]) -> str:
-        lines: list[str] = []
+    def _build_result_panel(self, result: ScanResult) -> Group:
+        status = self._build_status_text(result)
+        evidence = self._build_evidence_table(result)
+        warnings, errors = self._build_issues(result)
+        renderables = [status]
+        if evidence is not None:
+            renderables.append(evidence)
+        if warnings is not None:
+            renderables.append(warnings)
+        if errors is not None:
+            renderables.append(errors)
+        return Group(*renderables)
+
+    def render(self, results: list[ScanResult]):
+        console = Console()
         for result in results:
-            self._format_capability(result, lines)
-            self._format_status(result, lines)
-            self._format_evidence(result, lines)
-            self._format_issues(result, lines)
-            lines.append("="*50)
-            lines.append("")
-        return "\n".join(lines)
+            content = self._build_result_panel(result)
+            console.print(content)
