@@ -2,12 +2,9 @@ from rich.console import Console, Group
 from rich.table import Table
 from rich.panel import Panel
 from rich.text import Text
-from rich.traceback import install
 from .base import BaseRenderer
 from redring.core.models.result import ScanResult
 from redring.core.models.status import ScanStatus
-
-install()
 
 _STATUS_MAP:dict[ScanStatus, str] = {
     ScanStatus.PASS : ":white_check_mark: [bold green]PASS[/bold green]",
@@ -25,7 +22,7 @@ class CLIRenderer(BaseRenderer):
         table = Table()
         if not result.evidence:
             table.add_row("No evidence found")
-            return None
+            return Panel(table, title=result.capability)
         table.add_column("Evidence")
         table.add_column("Value")
         for key, value in result.evidence.items():
@@ -56,7 +53,7 @@ class CLIRenderer(BaseRenderer):
             )
         return warning_panel, error_panel
 
-    def _build_result_panel(self, result: ScanResult) -> Group:
+    def _build_result_content(self, result: ScanResult) -> Group:
         status = self._build_status_text(result)
         evidence = self._build_evidence_table(result)
         warnings, errors = self._build_issues(result)
