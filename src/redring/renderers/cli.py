@@ -18,7 +18,7 @@ class CLIRenderer(BaseRenderer):
         status_str = _STATUS_MAP.get(result.status, "")
         return Text.from_markup(status_str)
 
-    def _build_evidence_table(self, result: ScanResult) -> Panel[Table, str] | None:
+    def _build_evidence_table(self, result: ScanResult) -> Panel | None:
         table = Table()
         if not result.evidence:
             table.add_row("No evidence found")
