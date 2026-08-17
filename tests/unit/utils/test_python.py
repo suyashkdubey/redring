@@ -1,7 +1,7 @@
 import pytest
 import subprocess
 from dataclasses import dataclass
-from src.redring.utils.python import PythonUtilities
+from redring.utils.python import PythonUtilities
 
 # ----- Helper data structure ----- #
 @dataclass(frozen=True)
@@ -20,12 +20,12 @@ def utility():
     ("Linux", "linux")
 ])
 def test_detect_system(utility, monkeypatch, system, expected):
-    monkeypatch.setattr("src.redring.utils.python.platform.system", lambda: system)
+    monkeypatch.setattr("redring.utils.python.platform.system", lambda: system)
     result = utility._detect_system()
     assert result == expected
 
 def test_detect_system_failure(utility, monkeypatch):
-    monkeypatch.setattr("src.redring.utils.python.platform.system", lambda: "")
+    monkeypatch.setattr("redring.utils.python.platform.system", lambda: "")
     result = utility._detect_system()
     assert result == "unknown"
 
