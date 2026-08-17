@@ -11,6 +11,8 @@ class PythonUtilities():
         detects the operating system of the system and returns it.
         """
         system = platform.system()
+        if not system:
+            return "unknown"
         return system.strip().lower()
 
     def _determine_python_command_for_system(self) -> tuple[str, ...]:
@@ -20,11 +22,15 @@ class PythonUtilities():
         system = self._detect_system()
         if system == "windows":
             return ("python", "py")
+        if system == "unknown":
+            return ()
         return ("python", "python3")
 
     # below are the available utilities that developers can use
     def find_python(self) -> str | None:
         commands = self._determine_python_command_for_system()
+        if not commands:
+            return None
         for command in commands:
             result = subprocess.run([command, "-c", "import sys; print(sys.executable)"], capture_output=True, text=True)
             if result.returncode != 0:
