@@ -1,4 +1,4 @@
-> [!NOTE]
+> [!WARNING]
 > This tool is under active development and isn't usable yet.
 > The stable version released will be **v1.0.0**.
 
@@ -79,7 +79,8 @@ Current limitations:
 
 The easiest way to contribute is by **building a new scanner** or **improving existing scanner code**. Scanners are self-contained and follow a simple pattern, so it's the fastest way to get familiar with the codebase.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the scanner template and setup steps.
+> [!TIP]
+> [Click Here](https://redring.pages.dev/docs#docs-ref-scanner-spec) to know more about scanners
 
 ## Documentation
 
