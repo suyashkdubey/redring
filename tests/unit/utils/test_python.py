@@ -3,12 +3,6 @@ import subprocess
 from dataclasses import dataclass
 from redring.utils.python import PythonUtilities
 
-# ----- Helper data structure ----- #
-@dataclass(frozen=True)
-class FakeResult:
-    returncode: int
-    stdout: str
-
 # ----- testing ----- #
 @pytest.fixture
 def utility():
@@ -40,48 +34,33 @@ def test_determine_python_command_for_system(utility, monkeypatch, system, expec
     commands = utility._determine_python_command_for_system()
     assert commands == expected
 
-def test_find_python_success(utility, monkeypatch):
+def test_find_python_success(utility, monkeypatch, fake_result):
     def fake_run(*args, **kwargs):
-        return FakeResult(
-            returncode=0,
-            stdout="/fake/python\n"
-        )
+        return fake_result(returncode=0, stdout="/fake/python\n")
     
     monkeypatch.setattr(subprocess, "run", fake_run)
     result = utility.find_python()
     assert result == "/fake/python"
 
-def test_find_python_fallback(utility, monkeypatch):
+def test_find_python_fallback(utility, monkeypatch, fake_result):
     def fake_run(*args, **kwargs):
         command = args[0][0]
         if command == "python":
-            return FakeResult(
-                returncode=1,
-                stdout=""
-            )
+            return fake_result(returncode=1, stdout="")
         if command == "python3":
-            return FakeResult(
-                returncode=0,
-                stdout="/fake/python\n"
-            )
+            return fake_result(returncode=0, stdout="/fake/python\n")
         
     monkeypatch.setattr(subprocess, "run", fake_run)
     result = utility.find_python()
     assert result == "/fake/python"
 
-def test_find_python_failure(utility, monkeypatch):
+def test_find_python_failure(utility, monkeypatch, fake_result):
     def fake_run(*args, **kwargs):
         command = args[0][0]
         if command == "python":
-            return FakeResult(
-                returncode=1,
-                stdout=""
-            )
+            return fake_result(returncode=1, stdout="")
         if command == "python3":
-            return FakeResult(
-                returncode=1,
-                stdout=""
-            )
+            return fake_result(returncode=1, stdout="")
     monkeypatch.setattr(subprocess, "run", fake_run)
     result = utility.find_python()
     assert result is None
